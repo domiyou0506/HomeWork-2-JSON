@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>json</title>
+    <script>
+        function fetchAPI(){
+            // 비동기 네트워크 통신 함수 => 프로미스 사용  => 제이슨 데이터를 받아옴
+            return fetch('https://apis.data.go.kr/5080000/polcsttnCctvSttuService/getPolcsttnCctvSttu?serviceKey=jcbJovcNt07Idg8adeXhe9Z8xKCPVhFMxPPadVHkVkdScWUtUkXFyseGxIUZr15J%2BXtkquVYh0nGeRAzZp6e8Q%3D%3D&pageNo=1&numOfRows=10')
+            .then((response) => response.json())
+            .then((data) => data);
+            // .then((data)=> console.log(data));
+            // .then((data)=> console.log(data.dataseries));
+            // 안에 들어있는 데이터 찍기
+            // .then((data)=> console.log(data.dataseries[0].cloudcover));
+            // 0번째 cloudcover의 값을 찾기
+        }   
+        // 데이터를 담음
+        fetchAPI().then((datas) => {
+            console.log(datas.body);
+            showDatas(datas.body);
+        });
+        // 데이터를 어떻게 다룰지 결정
+        function showDatas(datas){
+            const ulElement = document.querySelector('#body');
+            ulElement.innerHTML = datas.map((data) => setLiElement(data)).join('');
+        }
+        function setLiElement(data){
+            return `    
+                <tr>
+                    <td>${data.sn}</td> 
+                    <td>${data.instl_place}</td> 
+                    <td>${data.la}</td> 
+                    <td>${data.lo}</td> 
+                    <td>${data.mgc_rspnber}</td> 
+                    <td>${data.telno} </td>
+                </tr>
+                `};
+        // }
+    </script>
+    <style>
+        body{
+            width: 1800px;
+            border: 2px solid black;
+        }
+        h2{
+            
+            text-align: center;
+        }
+        tr{
+            height: 80px;
+            border: 2px solid black;
+        }
+        td{
+            width: 300px;
+            border: 2px solid black;
+            text-align: center;
+        }
+        th{
+            background-color: rgb(192, 192, 192);
+            width: 300px;
+            border: 2px solid black;
+        }
+    </style>
+</head>
+<body>
+    <h2>경상북도 구미시 경찰서 무인카메라 설치 현황</h2>
+    <table>
+        <tr>
+            <th>번호</th>
+            <th>위치</th>
+            <th>la</th>
+            <th>lo</th>
+            <th>관할관청</th>
+            <th>담당자번호</th>
+        </tr> 
+    </table>
+    <table id="body">
+        
+    </table>
+</body>
+</html>
